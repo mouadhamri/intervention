@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+          <record id="account_journal_dashboard_kanban_view" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates/t[@t-name='JournalTop']//field[@name='name']" position="before">
+                <field name="code"/>-
+            </xpath>
+
+        </field>
+          </record>
+         <record id="view_account_journal_form" model="ir.ui.view">
+        <field name="name">account.journal.form</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <field name="type" position="after">
+                <field name="journal_sous_traitant" attrs="{'invisible':[('type', '!=', 'purchase')]}"/>
+            </field>
+        </field>
+         </record>
+
+
+        <record id="view_out_invoice_tree_inherit" model="ir.ui.view">
+            <field name="name">account.move.tree.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_out_invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="ref" string="N° BC client"/>
+                </field>
+
+            </field>
+        </record>
+
+        <record id="account_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="n_siret"/>
+                </field>
+<!--                <xpath expr="//div[@class='o_td_label]//label[2]" position="after">-->
+<!--                     <label for="partner_id" string="Sous-traitant" style="font-weight:bold;"-->
+<!--                                    attrs="{'invisible': ['|', ('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>-->
+<!--                </xpath>-->
+                <field name="invoice_user_id" position="before">
+                    <field name="marche"/>
+                    <field name="code_service"/>
+                    <field name="line_chantier_id" invisible="0"/>
+                </field>
+                <xpath expr="//header" position="inside">
+                    <button name="action_post" string="Confirmer"
+                            class="oe_highlight" type="object"
+                            groups="account.group_account_invoice"
+                            attrs="{'invisible': ['|', '|', ('show_confirm_button', '=', False),
+                        ('auto_post', '=', True), ('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+
+                    <button name="action_en_attente" type="object" class="btn-primary"
+                            string="Soumettre à validation" groups="account.group_account_invoice"
+                            attrs="{'invisible': ['|', ('state','in',('attente', 'posted', 'cancel')),
+                             ('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))] }"/>
+
+                     <button name="action_invoice_followup_sent" type="object" class="btn-primary"
+                            string="Relance" groups="account.group_account_invoice"
+                            attrs="{'invisible': ['|', ('state','in',('attente', 'draft','cancel')),
+                            ('followup_required', '=', False)] }"/>
+
+
+
+                </xpath>
+<!--                <field name="state" position="replace">-->
+<!--                    <field name="state" widget="statusbar" statusbar_visible="draft,posted,attente"/>-->
+<!--                </field>-->
+
+
+                <xpath expr="//header//button[2]" position="attributes">
+                    <attribute name="attrs">{'invisible':['|', '|', ('show_confirm_button', '=', False),
+                        ('auto_post', '=', True), ('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}
+                       </attribute>
+                    <attribute name="groups">account_extend.group_invoice_post_button</attribute>
+                </xpath>
+
+                <xpath expr="//header//button[4]" position="attributes">
+                    <attribute name="attrs">{'invisible':['|', '|','|', ('state', '!=', 'posted'), ('is_move_sent', '=', False),
+                        ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')),
+                        ('type_facturation','!=','email')]}</attribute>
+<!--                    <attribute name="attrs">{'invisible':[('type_facturation','!=','email')]}</attribute>-->
+                </xpath>
+                <xpath expr="//header//button[3]" position="attributes">
+                    <attribute name="attrs">{'invisible':['|', '|','|', ('state', '!=', 'posted'),
+                        ('is_move_sent', '=', True), ('move_type', 'not in', ('out_invoice', 'out_refund')),
+                        ('type_facturation','!=','email')]}</attribute>
+<!--                    <attribute name="attrs">{'invisible':[('type_facturation','!=','email')]}</attribute>-->
+                </xpath>
+
+                <xpath expr="//notebook" position="inside">
+                    <page string="Infos Paiements" attrs="{'invisible':[('move_type', 'not in', ('out_invoice', 'out_refund'))]}">
+                        <sheet>
+                            <group>
+                                <field name="show_confirm_button" invisible="1"/>
+                                <field name="followup_required" invisible="1"/>
+                                <field name="type_facturation"/>
+                                <field name="partner_text_facturation"/>
+                                <field name="modalite_paiement_id"/>
+                            </group>
+                        </sheet>
+                    </page>
+                    <page string="Locataire/particulier" attrs="{'invisible':[('move_type', 'not in', ('out_invoice', 'out_refund'))]}">
+                        <group>
+                            <field name="sale_chantier_id" readonly="1" force_save="1"/>
+                            <field name="nom_client_final" readonly="1" force_save="1"/>
+                            <field name="ville_client_final" readonly="1" force_save="1"/>
+                            <field name="partner_address_1" readonly="1" force_save="1"/>
+                            <field name="tel_client_final"  readonly="1" force_save="1"/>
+                            <field name="code_postal" readonly="1" force_save="1"/>
+                            <field name="adress3" readonly="1" force_save="1"/>
+
+                            <field name="civility" invisible="1" readonly="1" force_save="1"/>
+                            <field name="text_civility" invisible="1" readonly="1" force_save="1"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_journal_tree" model="ir.ui.view">
+            <field name="name">account.journal.tree</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_tree"></field>
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="code"/>
+                </field>
+            </field>
+        </record>
+
+           <record id="view_move_line_tree_extend" model="ir.ui.view">
+        <field name="name">account.move.line.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <field name="analytic_tag_ids" position="after">
+                <field name="line_chantier_id" optional="show"/>
+            </field>
+        </field>
+           </record>
+        <record id="view_move_line_tree_grouped_tree_extend" model="ir.ui.view">
+        <field name="name">account.move.line.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree_grouped"/>
+        <field name="arch" type="xml">
+            <field name="account_id" position="after">
+                <field name="line_chantier_id" optional="show"/>
+            </field>
+        </field>
+           </record>
+        <record id="view_move_line_tax_audit_tree" model="ir.ui.view">
+            <field name="name">account.move.line.tax.audit.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tax_audit_tree"/>
+            <field name="arch" type="xml">
+                <field name="move_id" position="after">
+                      <field name="debit" sum="Total Debit"/>
+
+                    <field name="credit" sum="Total Credit"/>
+
+                </field>
+            </field>
+        </record>
+        <record id="view_account_move_line_filter_search" model="ir.ui.view">
+            <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+            <field name="name">account.consolidation.move.line.search</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <filter name="group_by_move" position="after">
+                    <filter string="Tax" name="group_by_tax" domain="[]" context="{'group_by': 'unique_tax_id'}"/>
+
+                </filter>
+            </field>
+        </record>
+
+    </data>
+</odoo>

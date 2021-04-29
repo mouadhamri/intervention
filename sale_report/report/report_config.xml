@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+             <record id="bc_creteil_report_id" model="ir.actions.report">
+            <field name="name">Bon de commande Créteil</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sale_report.bc_creteil_template</field>
+            <field name="report_file">sale_report.bc_creteil_template</field>
+            <field name="binding_model_id" ref="model_sale_order"/>
+            <field name="binding_type">report</field>
+        </record>
+
+<!--         <report-->
+<!--            id="bc_creteil_report_id"-->
+<!--            model="sale.order"-->
+<!--            report_type="qweb-pdf"-->
+<!--            string="Bon de commande Créteil"-->
+<!--            name="sale_report.bc_creteil_template"-->
+<!--            file="sale_report.bc_creteil_template"/>-->
+            <!--multi="True"/>-->
+
+   </data>
+</odoo>

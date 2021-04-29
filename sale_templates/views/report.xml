@@ -1,0 +1,55 @@
+<odoo>
+	 <record id="report_qweb_paperformat_devis" model="report.paperformat">
+        <field name="name">A4 devis</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">42</field>
+        <field name="margin_bottom">27</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">47</field>
+        <field name="dpi">90</field>
+    </record>
+<!--	<report id="sale_report_first"-->
+<!--	        string="Devis"-->
+<!--	        model="sale.order"-->
+<!--	        report_type="qweb-pdf"-->
+<!--			name="sale_templates.report_saleorder_first"-->
+<!--			file="sale_templates.report_saleorder_first"/>-->
+	<record id="sale_report_first" model="ir.actions.report">
+            <field name="name">Devis</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sale_templates.report_saleorder_first</field>
+            <field name="report_file">sale_templates.report_saleorder_first</field>
+            <field name="print_report_name">(object.state in ('draft', 'sent') and 'Devis - %s' % (object.name)) or 'Commande - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_sale_order"/>
+            <field name="binding_type">report</field>
+        </record>
+	<record id="sale_report_second" model="ir.actions.report">
+            <field name="name">Devis de régul</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">sale_templates.report_saleorder_second</field>
+            <field name="report_file">sale_templates.report_saleorder_second</field>
+            <field name="print_report_name">(object.state in ('draft', 'sent') and 'Devis de régul - %s' % (object.name)) or 'Commande de régul - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_sale_order"/>
+            <field name="binding_type">report</field>
+        </record>
+
+<!--		<report id="sale_report_second"-->
+<!--	        string="Devis de régul"-->
+<!--	        model="sale.order"-->
+<!--	        report_type="qweb-pdf"-->
+<!--			name="sale_templates.report_saleorder_second"-->
+<!--			file="sale_templates.report_saleorder_second"/>-->
+	 <record id="sale_templates.sale_report_second" model="ir.actions.report">
+            <field name="paperformat_id" ref="sale_templates.report_qweb_paperformat_devis"/>
+        </record>
+	<record id="sale_templates.sale_report_first" model="ir.actions.report">
+            <field name="paperformat_id" ref="sale_templates.report_qweb_paperformat_devis"/>
+        </record>
+
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="gecop_invoice_report_id" model="ir.actions.report">
+            <field name="name">Factures Gecop</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_extend.report_gecop_invoice</field>
+            <field name="report_file">account_extend.report_gecop_invoice</field>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="print_report_name">'factures gecop - %s' % (object.name)</field>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="gecop_invoice_valophis_report_id" model="ir.actions.report">
+            <field name="name">Factures VALOPHIS</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_extend.report_gecop_valophis_invoice</field>
+            <field name="report_file">account_extend.report_gecop_valophis_invoice</field>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="print_report_name">'factures VALOPHIS - %s' % (object.name)</field>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="gecop_invoice_rivp_report_id" model="ir.actions.report">
+            <field name="name">Factures RIVP</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_extend.report_gecop_rivp_invoice</field>
+            <field name="report_file">account_extend.report_gecop_rivp_invoice</field>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="print_report_name">'factures RIVP - %s' % (object.name)</field>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>
